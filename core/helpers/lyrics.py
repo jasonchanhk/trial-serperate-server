@@ -1,4 +1,7 @@
+import os
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
@@ -8,19 +11,34 @@ from selenium.common.exceptions import TimeoutException
 from webdriver_manager.firefox import GeckoDriverManager
 from bs4 import BeautifulSoup
 
-firefox_installation = GeckoDriverManager().install()
+def  load_driver():
+	options = webdriver.FirefoxOptions()
+	
+	# enable trace level for debugging 
+	options.log.level = "trace"
+
+	options.add_argument("-remote-debugging-port=9224")
+	options.add_argument("-headless")
+	options.add_argument("-disable-gpu")
+	options.add_argument("-no-sandbox")
+
+	binary = FirefoxBinary(os.environ.get('FIREFOX_BIN'))
+
+	firefox_driver = webdriver.Firefox(
+		firefox_binary=binary,
+		executable_path=os.environ.get('GECKODRIVER_PATH'),
+		options=options)
+
+	return firefox_driver
 
 def click_on_page(song_name, artist_name):
     if artist_name == "":
         artist_name = "none"   
 
-    options = Options()
-    # options.headless = True
-    driver = webdriver.Firefox(options=options, service = Service(firefox_installation))
-
     search_URL = f"https://lyricstranslate.com/en/translations/328/42/{artist_name}/{song_name}/none/0/0/0/0"
+
+    driver = load_driver()
     driver.get(search_URL)
-    print(search_URL)
 
     try:
         WebDriverWait(driver, 4).until(EC.element_to_be_clickable((By.XPATH,'/html/body/div[1]/div/div/div/div[2]/div/button[2]'))).click()
