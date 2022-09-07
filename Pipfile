@@ -1,0 +1,41 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-cors = "*"
+python-dotenv = "*"
+requests = "*"
+waitress = "*"
+gunicorn = "*"
+flask-jwt-extended = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+pyjwt = "*"
+werkzeug = "*"
+selenium = "*"
+webdriver-manager = "*"
+beautifulsoup4 = "*"
+pytube = "*"
+lxml = "*"
+colorama = "*"
+psycopg2 = "*"
+
+
+[dev-packages]
+pytest = "*"
+pytest-cov = "*"
+
+[requires]
+python_version = "3.10"
+
+[scripts]
+init_db = "python init_db.py"
+dev = "flask run -p 7777"
+test = "pytest ."
+coverage = "pytest --cov-report term-missing --cov=."
+start = "gunicorn core:app --bind=127.0.0.1:8000"
+startw = "waitress-serve --host 127.0.0.1 --port 8000 core:app"
+
